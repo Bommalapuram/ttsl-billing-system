@@ -1,14 +1,16 @@
 pipeline {
     agent any
     environment {
-        DOCKER_HUB_USER = 'user-two'   # <--- మనం ఫైనల్ గా సెలెక్ట్ చేసుకున్న కరెక్ట్ ఐడి
+        DOCKER_HUB_USER = 'devpractice1'
         FRONTEND_IMAGE = 'frontend-service'
         BACKEND_IMAGE = 'backend-service'
         IMAGE_TAG = "${BUILD_NUMBER}"
     }
     stages {
         stage('1. Code Sync') {
-            steps { checkout scm }
+            steps { 
+                checkout scm 
+            }
         }
         stage('2. Build Frontend & Backend') {
             steps {
