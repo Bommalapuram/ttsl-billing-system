@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        DOCKER_HUB_USER = 'devpractice1'
+        DOCKER_HUB_USER = 'user-two'
         FRONTEND_IMAGE = 'frontend-service'
         BACKEND_IMAGE = 'backend-service'
         IMAGE_TAG = "${BUILD_NUMBER}"
