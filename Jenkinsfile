@@ -1,5 +1,6 @@
 node {
-    // 1. ఎన్విరాన్‌మెంట్ల వేరియబుల్స్ సెటప్
+    // 1. ఎన్విరాన్‌మెంట్ల వేరియబుల్స్ సెటప్ (ఇక్కడ మీ సర్వర్ 1 ఒరిజినల్ ఐపి ఇవ్వాలి)
+    def SONAR_SERVER_URL = 'http://54.196.196.79:9000/' 
     def DOCKER_HUB_USER = 'devpractice1'
     def FRONTEND_IMAGE = 'frontend-service'
     def BACKEND_IMAGE = 'backend-service'
@@ -10,10 +11,19 @@ node {
     }
 
     stage('2. SonarQube Code Analysis') {
-        echo "Starting SonarQube Static Code Analysis for TTSL-Billing project..."
-        // నోట్: జెన్కిన్స్ లోపల సోనార్-స్కానర్ ఇన్స్టాల్ అయి ఉంటే ఈ టోకెన్ వాడుకుంటాం
+        echo "Executing Live Dockerized SonarQube Scanner for TTSL-Billing project..."
         withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
-            echo "SonarQube credentials validated successfully."
+            // డాకర్ కంటైనర్ ద్వారా సోనార్ స్కానర్ రన్ చేసి డేటాను డాష్‌బోర్డ్‌కి పంపడం
+            sh """
+            docker run --rm \
+              -v "${WORKSPACE}:/usr/src" \
+              sonarsource/sonar-scanner-cli \
+              -Dsonar.projectKey=ttsl-telecom-billing \
+              -Dsonar.projectName=ttsl-telecom-billing \
+              -Dsonar.sources=/usr/src/src \
+              -Dsonar.host.url=${SONAR_SERVER_URL} \
+              -Dsonar.token=${SONAR_TOKEN}
+            """
         }
     }
 
