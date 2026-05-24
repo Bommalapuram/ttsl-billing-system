@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ttsl-backend
+spec:
+  replicas: {{ .Values.backend.replicaCount }}
+  selector:
+    matchLabels:
+      app: ttsl-backend
+  template:
+    metadata:
+      labels:
+        app: ttsl-backend
+    spec:
+      containers:
+      - name: backend-engine
+        image: {{ .Values.backend.image }}
+        env:
+        - name: DB_HOST
+          value: "ttsl-database-svc"
+        - name: DB_NAME
+          value: {{ .Values.database.name }}
+        - name: DB_USER
+          value: {{ .Values.database.user }}
+        - name: DB_PASS
+          value: {{ .Values.database.pass }}
+        ports:
+        - containerPort: {{ .Values.backend.containerPort }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ttsl-backend-svc
+spec:
+  ports:
+  - port: 5000
+  selector:
+    app: ttsl-backend

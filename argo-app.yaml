@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: ttsl-3tier-app
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'YOUR_GITHUB_REPO_URL_HERE'
+    targetRevision: HEAD
+    path: helm-chart
+  destination:
+    server: 'https://default.svc'
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

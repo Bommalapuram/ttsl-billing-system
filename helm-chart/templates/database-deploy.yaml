@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ttsl-database
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ttsl-database
+  template:
+    metadata:
+      labels:
+        app: ttsl-database
+    spec:
+      containers:
+      - name: postgres
+        image: {{ .Values.database.image }}
+        env:
+        - name: POSTGRES_USER
+          value: {{ .Values.database.user }}
+        - name: POSTGRES_PASSWORD
+          value: {{ .Values.database.pass }}
+        - name: POSTGRES_DB
+          value: {{ .Values.database.name }}
+        ports:
+        - containerPort: {{ .Values.database.containerPort }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ttsl-database-svc
+spec:
+  ports:
+  - port: 5432
+  selector:
+    app: ttsl-database
